@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dc-management-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dc-management-api
+  template:
+    metadata:
+      labels:
+        app: dc-management-api
+    spec:
+      containers:
+        - name: dc-management-api
+          image: inseefrlab/datacollection-management-api:0.3.10
+          ports:
+            - containerPort: 8080
+          resources: {}
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://my-postgresql-cocorico:5432/postgres"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "postgres"
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: my-postgresql-cocorico
+                  key: postgres-password
+            - name: FR_INSEE_DATACOLLECTIONMANAGEMENT_API_QUESTIONING_URL
+              value: "https://questionnaire-particuliers.dev.insee.io"
+      restartPolicy: Always
