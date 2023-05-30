@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import fr.insee.survey.datacollectionmanagement.query.repository.MonitoringRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,7 @@ public class MonitoringController {
 
     @Autowired
     CampaignService campaignService;
+    private MonitoringRepository monitoringRepository;
 
     @GetMapping(value = "/api/moog/campaigns/{idCampaign}/monitoring/progress", produces = "application/json")
     public JSONCollectionWrapper<MoogProgressDto> getDataForProgress(@PathVariable String idCampaign) {
@@ -78,5 +80,10 @@ public class MonitoringController {
     public JSONCollectionWrapper<MoogFollowUpDto> getDataToFollowUpTemp(@PathVariable String idCampaign) {
         LOGGER.info("Request GET for following table for campaign : {}", idCampaign);
         return monitoringService.getFollowUp(idCampaign);
+    }
+
+    @GetMapping(value = "/api/temp/moog/monitoring/vulnerability/{userstring}", produces = "application/json")
+    public String vulnerability(@PathVariable String userstring){
+        return this.monitoringRepository.vulnerabilite(userstring);
     }
 }
